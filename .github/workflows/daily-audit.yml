@@ -1,0 +1,55 @@
+name: Daily repo audit (billing-free scheduler)
+
+# Public repo, so this always gets free GitHub Actions minutes regardless
+# of the account's billing status -- unlike the equivalent workflow tried
+# directly in the private vivekearthz/lovable-repository-audit repo, which
+# GitHub refused to start with "recent account payments have failed or
+# your spending limit needs to be increased."
+#
+# This does not fix that underlying billing problem -- it only routes this
+# one automation around its effect. See scripts/auto-heal-remote.mjs for
+# why no sensitive data (real repo names, the Lovable mapping) is ever
+# stored in this public repo: everything is read/written at runtime, over
+# the API, directly to/from the private data repo instead.
+
+on:
+  schedule:
+    - cron: "0 21 * * *" # 21:00 UTC == 02:30 IST (UTC+5:30, no DST)
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (report only, change nothing)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run auto-heal (remote data)
+        env:
+          GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.LOVABLE_AUDIT_PAT }}
+          DATA_REPO: vivekearthz/lovable-repository-audit
+        run: |
+          if [ -z "$GH_PERSONAL_ACCESS_TOKEN" ]; then
+            echo "LOVABLE_AUDIT_PAT repository secret is not set." >&2
+            exit 1
+          fi
+          DRY_FLAG=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            DRY_FLAG="--dry-run"
+          fi
+          node scripts/auto-heal-remote.mjs $DRY_FLAG
