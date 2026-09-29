@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "portalKey": "lovableauditscheduler",
+  "managedBy": "martech-master",
+  "master": "MARTECH",
+  "masterApiBase": "https://martech.innovexsis.com/api/public",
+  "sharedRegistry": {
+    "github": "vivekearthz/my-secret-automagic-951f232c:.lovable/fleet-registry.json",
+    "database": "guardian_sync_state:fleet_registry",
+    "mirror": "sovereign mirror guardian_sync_state:fleet_registry"
+  },
+  "readOrder": [
+    "primary",
+    "sovereign_mirror",
+    "shared_github_registry",
+    "cached_state"
+  ],
+  "refresh": {
+    "snapshot": "/api/public/portal/fleet-refresh",
+    "replicationStatus": "/api/public/portal/replication-status",
+    "converge": "/api/public/portal/fleet-refresh (signed POST)",
+    "selfHeal": "/api/public/cron/sovereign-health"
+  },
+  "contractVersion": 2
+}
