@@ -1,0 +1,47 @@
+{
+  "schema": 2,
+  "portalKey": "lovableauditscheduler",
+  "repository": "vivekearthz/lovable-audit-scheduler",
+  "role": "slave",
+  "managedBy": "martech-master",
+  "master": "MARTECH",
+  "masterApiBase": "https://martech.innovexsis.com/api/public",
+  "policyVersion": 71,
+  "rule": "Each portal replicates its guardian + identity state to an independent Supabase-compatible Postgres. Reads fail over to the mirror whenever the vendor-managed primary is unhealthy. Lovable is last resort only.",
+  "requiredSecrets": [
+    "SOVEREIGN_SUPABASE_URL",
+    "SOVEREIGN_SUPABASE_SERVICE_KEY",
+    "MASTER_SYNC_SECRET"
+  ],
+  "mirroredTables": [
+    "guardian_sync_state",
+    "guardian_sync_log",
+    "guardian_commands",
+    "guardian_patch_state",
+    "guardian_capabilities",
+    "guardian_fleet_portals",
+    "guardian_fleet_events",
+    "guardian_code_sync",
+    "guardian_publish_log",
+    "profiles",
+    "user_roles"
+  ],
+  "schemaFile": ".guardian/sovereign-mirror-schema.sql",
+  "endpoints": {
+    "health": "/api/public/portal/sovereignty",
+    "replicate": "/api/public/portal/sovereignty (signed POST)",
+    "selfHeal": "/api/public/cron/sovereign-health (signed POST; read-only GET)",
+    "guardian": "/api/public/cron/guardian"
+  },
+  "selfHealing": {
+    "cron": "every 15 minutes (GitHub Actions + pg_cron + master sweep)",
+    "retry": "bounded exponential backoff with jitter, 5 attempts, durable next-cycle retry",
+    "transition": "primary authoritative; mirror eligible only after parity verification",
+    "fallback": [
+      "primary",
+      "sovereign_mirror",
+      "cached_state"
+    ],
+    "escalation": "reported to the master over the signed two-way channel"
+  }
+}
