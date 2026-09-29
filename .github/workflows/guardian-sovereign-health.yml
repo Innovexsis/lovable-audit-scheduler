@@ -1,0 +1,31 @@
+# Managed by martech-master — sovereign health + fallback probe.
+# Do not edit by hand; the master rewrites this file on every reconcile cycle.
+name: guardian-sovereign-health
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify sovereign fallback
+        env:
+          PORTAL_URL: ${{ vars.PORTAL_URL || '' }}
+        run: |
+          if [ -z "$PORTAL_URL" ]; then
+            echo "PORTAL_URL not configured yet; master will set it on the next sweep."
+            exit 0
+          fi
+          for path in /api/public/cron/sovereign-health; do
+            for attempt in 1 2 3; do
+              code=$(curl -s -o /tmp/out.json -w '%{http_code}' --max-time 60 "$PORTAL_URL$path" || echo 000)
+              echo "$path attempt $attempt -> $code"
+              head -c 800 /tmp/out.json || true
+              echo
+              if [ "$code" = "200" ]; then break; fi
+              sleep $((attempt * 20))
+            done
+          done
