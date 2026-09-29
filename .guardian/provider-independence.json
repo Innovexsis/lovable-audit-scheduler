@@ -1,0 +1,84 @@
+{
+  "policy": "direct-to-provider",
+  "version": 2,
+  "portal_key": "lovableauditscheduler",
+  "repository": "vivekearthz/lovable-audit-scheduler",
+  "authority": "martech-master",
+  "master_in_send_path": false,
+  "principle": "Every portal reaches its outbound providers directly with its own credentials. The master distributes policy only; it is never a runtime dependency for delivery.",
+  "channels": {
+    "email": {
+      "mode": "rotating-multi-provider",
+      "providers": [
+        "resend",
+        "brevo",
+        "sendgrid",
+        "mailgun",
+        "postmark"
+      ],
+      "credentials_env": {
+        "resend": [
+          "RESEND_API_KEY"
+        ],
+        "brevo": [
+          "BREVO_API_KEY"
+        ],
+        "sendgrid": [
+          "SENDGRID_API_KEY"
+        ],
+        "mailgun": [
+          "MAILGUN_API_KEY",
+          "MAILGUN_DOMAIN"
+        ],
+        "postmark": [
+          "POSTMARK_SERVER_TOKEN"
+        ],
+        "shared": [
+          "EMAIL_FROM_ADDRESS"
+        ]
+      },
+      "rotation": "healthy-first, least-recently-used, circuit-breaker aware"
+    },
+    "whatsapp": {
+      "mode": "direct-emovur-api",
+      "endpoint": "{WHATSAPP_API_BASE_URL}{WHATSAPP_SEND_PATH|/messages}",
+      "credentials_env": [
+        "WHATSAPP_API_BASE_URL",
+        "WHATSAPP_WABA_ID",
+        "WHATSAPP_PHONE_NUMBER_ID",
+        "WHATSAPP_API_SECRET"
+      ],
+      "optional_env": [
+        "WHATSAPP_SEND_PATH",
+        "WHATSAPP_STATUS_PATH"
+      ]
+    }
+  },
+  "resilience": {
+    "circuit_breaker_cooldown_ms": [
+      0,
+      30000,
+      120000,
+      600000,
+      1800000,
+      3600000
+    ],
+    "in_provider_retries": 2,
+    "outbox": "durable, stored in guardian_sync_state (mirrored), max 8 attempts",
+    "outbox_backoff_ms": [
+      60000,
+      300000,
+      900000,
+      3600000,
+      10800000
+    ],
+    "self_heal_cron": "/api/public/cron/provider-heal",
+    "status_endpoint": "/api/public/portal/provider-health"
+  },
+  "state_storage": {
+    "table": "guardian_sync_state",
+    "provider_key_prefix": "provider:",
+    "outbox_key_prefix": "outbox:",
+    "failover": "primary database first, sovereign mirror when paused or erroring"
+  }
+}
