@@ -8,7 +8,7 @@
   "masterRepo": "vivekearthz/my-secret-automagic-951f232c",
   "masterHost": "https://martech.innovexsis.com",
   "masterApiBase": "https://martech.innovexsis.com/api/public",
-  "patchVersion": "v74",
+  "patchVersion": "v70",
   "agentVersion": 6,
   "managedBy": "martech-master"
 }
