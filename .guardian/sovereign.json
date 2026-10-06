@@ -3,7 +3,7 @@
   "portalKey": "lovableauditscheduler",
   "policyVersion": 71,
   "master": "MARTECH",
-  "masterApiBase": "https://martech.innovexsis.com/api/public",
+  "masterApiBase": "https://my-secret-automagic.lovable.app/api/public",
   "rule": "No Lovable dependency may be required. Lovable is last resort only.",
   "matrix": {
     "database": {
