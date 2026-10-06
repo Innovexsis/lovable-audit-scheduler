@@ -1,60 +1,34 @@
-# MASTER PATCH v70 — Version Convergence + Shared Email/WhatsApp Capacity
+# MASTER PATCH v76 — Public Product Pages and Installable Identity
 
-Mandatory for the master portal, every sub-portal and every slave portal owned by
-vivekearthz (vivekearthz@gmail.com). Master wins on every conflict. This bundle
-supersedes v59 and folds in everything authored between v60 and v70.
+This policy covers every verified public portal. A portal's management status
+does not remove it from identity monitoring. Independent or monitor-only portals
+receive a finding and local adoption instructions; the master MUST NOT write to
+their repositories or overwrite their approved identity.
 
-## 1. ONE version constant (root cause of the "stuck at v59" drift)
+## Required public product experience
 
-1. No portal may hard-code a patch/policy version string anywhere. The single
-   source of truth is `src/lib/fleet-version.ts`
-   (`FLEET_PATCH_VERSION`, `FLEET_VERSION_NUMBER`).
-2. `/api/public/portal/version` MUST report that constant, never a literal.
-3. Version comparison is NUMERIC. A portal already ahead of the master is never
-   downgraded; only portals strictly behind are re-patched.
-4. The daily orchestrator re-dispatches the current bundle to every portal whose
-   reported version is behind, with retry + backoff, and re-verifies by loopback
-   against the live deployment (not just the GitHub commit).
+Every public product or service must have a direct, crawlable page that explains
+its purpose, features, advantages, accurate pricing or contact-sales state,
+current promotion, and a purchase/contact action. The parent portal must link to
+this page so a customer can buy one product without browsing the whole suite.
 
-## 2. Inherited mandates v60 - v69 (unchanged, restated for slaves)
+Each product must also expose its own installable PWA identity: unique app name,
+short name, description, stable id, start page, theme, favicon, Apple icon and
+192/512 icons. Shared authentication, database, billing and connectors remain
+shared; product identity does not duplicate the service layer.
 
-- v60/v61 Shared fleet model registry + weekly free-LLM catalogue refresh.
-- v62 Permissive-license service inheritance (interview copilot family).
-- v63 Fleet service cross-reference: internal-first reuse is enforced in the UI.
-- v64 Autonomous YouTube Shorts automation agent.
-- v65 Master workspace / repo / host identity re-announcement.
-- v66 Commerce + customer-journey parity (pricing, checkout, post-payment
-  hand-off, logout) on every portal.
-- v67 Continuous parity + 3-strike escalation with weekly deep sweep.
-- v68 Total Lovable independence (AI **and** Cloud lanes).
-- v69 Shared fleet email authority: master-owned provider keys only.
+## Search and AI identity
 
-## 3. Email capacity is POOLED, never single-provider
+Publish unique title, description, canonical, og:url, structured Product or
+SoftwareApplication data, robots rules and sitemap entries for every product.
+Describe the parent relationship as “part of Innovexsis” without collapsing the
+product's own name or canonical identity.
 
-1. Slaves hold NO email provider keys. They relay through the master.
-2. Daily email capacity reported anywhere (dashboards, digests, pre-flight
-   reports) MUST be the POOLED free allowance across every configured provider
-   — Brevo, SendPulse, Mailjet, MailerSend, SendGrid, Elastic Email, SMTP2GO —
-   not the first provider's 300/day.
-3. Rotation stays quota-aware: providers at their daily allowance are skipped,
-   the rest are ordered by load ratio.
+## Safety and verification
 
-## 4. WhatsApp reinstatement ramp target = 750/day
+Preserve all approved names, logos and domains. Unknown prices must say contact
+sales. Verify the public page, manifest, icons, metadata, robots and sitemap after
+deployment. Retry transient checks at most three times and report inaccessible,
+unpublished or independent portals as pending owner-project adoption.
 
-1. The post-reinstatement ramp ends at the configured target
-   (`WA_MARKETING_DAILY_TARGET`, default **750**) instead of stalling at an
-   intermediate ladder rung.
-2. Once the ramp days exceed the ladder, the target cap applies permanently
-   while quality stays green.
-3. Hourly pacing must be able to deliver the target inside the send window;
-   the hourly cap default rises with the target.
-4. OTP / auth / service replies are never throttled by these caps.
-
-## 5. Self-healing
-
-- Version drift, capacity drift and email-key drift are all repaired by the
-  daily 02:30 IST orchestrator with retry + backoff and owner escalation after
-  3 consecutive failures. No human step is ever required.
-
-
-<!-- applied-by: MARTECH master | version: v70 | reason: cron:fleet-identity-drift | at: 2026-08-26T02:29:07.317Z -->
+<!-- applied-by: MARTECH master | version: v76 | reason: slave-patch-selfheal:fleet | at: 2026-10-06T02:20:04.727Z -->
