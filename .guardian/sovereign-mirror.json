@@ -5,7 +5,7 @@
   "role": "slave",
   "managedBy": "martech-master",
   "master": "MARTECH",
-  "masterApiBase": "https://martech.innovexsis.com/api/public",
+  "masterApiBase": "https://my-secret-automagic.lovable.app/api/public",
   "policyVersion": 71,
   "rule": "Each portal replicates its guardian + identity state to an independent Supabase-compatible Postgres. Reads fail over to the mirror whenever the vendor-managed primary is unhealthy. Lovable is last resort only.",
   "requiredSecrets": [
