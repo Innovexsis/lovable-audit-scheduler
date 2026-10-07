@@ -31,4 +31,4 @@ sales. Verify the public page, manifest, icons, metadata, robots and sitemap aft
 deployment. Retry transient checks at most three times and report inaccessible,
 unpublished or independent portals as pending owner-project adoption.
 
-<!-- applied-by: MARTECH master | version: v76 | reason: slave-patch-selfheal:fleet | at: 2026-10-06T02:20:04.727Z -->
+<!-- applied-by: MARTECH master | version: v76 | reason: slave-patch-selfheal:fleet | at: 2026-10-06T02:25:03.559Z -->
