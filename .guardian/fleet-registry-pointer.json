@@ -3,7 +3,7 @@
   "portalKey": "lovableauditscheduler",
   "managedBy": "martech-master",
   "master": "MARTECH",
-  "masterApiBase": "https://my-secret-automagic.lovable.app/api/public",
+  "masterApiBase": "https://command.innovexsis.com/api/public",
   "sharedRegistry": {
     "github": "Innovexsis/my-secret-automagic:.lovable/fleet-registry.json",
     "database": "guardian_sync_state:fleet_registry",
