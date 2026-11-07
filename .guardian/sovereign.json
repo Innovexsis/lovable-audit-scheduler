@@ -3,7 +3,7 @@
   "portalKey": "lovableauditscheduler",
   "policyVersion": 71,
   "master": "MARTECH",
-  "masterApiBase": "https://my-secret-automagic.lovable.app/api/public",
+  "masterApiBase": "https://command.innovexsis.com/api/public",
   "rule": "No Lovable dependency may be required. Lovable is last resort only.",
   "matrix": {
     "database": {
@@ -55,34 +55,47 @@
       "notes": "Schedules live in the database itself and in GitHub Actions; both call the public cron routes, so no Lovable scheduler is required."
     },
     "ai": {
-      "sovereignPrimary": "master_ai_gateway",
+      "sovereignPrimary": "gemini_direct",
       "ladder": [
-        "master_ai_gateway",
-        "nvidia_nim_free",
-        "cursor",
-        "groq",
+        "gemini",
         "openrouter",
+        "nvidia_nim_free",
+        "ollama",
+        "groq",
+        "mistral",
+        "huggingface",
         "pollinations_keyless",
         "lovable_gateway_only_if_enabled"
       ],
       "envKeys": [
-        "MASTER_SYNC_SECRET",
+        "GEMINI_API_KEY",
+        "OPENROUTER_API_KEY",
         "NVIDIA_API_KEY_SECRET",
-        "CURSOR_API_KEY",
+        "OLLAMA_API_KEY",
         "GROQ_API_KEY"
       ],
-      "notes": "Keyless floor guarantees AI keeps working with zero credits."
+      "notes": "Standalone per-project ladder; keyless floor keeps AI working with zero credits."
     },
     "email": {
-      "sovereignPrimary": "master_email_relay",
+      "sovereignPrimary": "rotating_direct_providers",
       "ladder": [
-        "master_email_relay",
-        "lovable_emails_last_resort"
+        "brevo",
+        "resend",
+        "sendgrid",
+        "mailersend",
+        "elasticemail",
+        "mailjet",
+        "durable_outbox_retry"
       ],
       "envKeys": [
-        "MASTER_SYNC_SECRET"
+        "BREVO_API_KEY",
+        "RESEND_API_KEY",
+        "SENDGRID_API_KEY",
+        "MAILERSEND_API_KEY",
+        "ELASTICEMAIL_API_KEY",
+        "MAILJET_API_KEY"
       ],
-      "notes": "Master owns and rotates the provider keys; slaves hold none."
+      "notes": "This portal holds its own provider keys and rotates healthy-first; the master is never in the send path."
     },
     "publish": {
       "sovereignPrimary": "deploy_hook_or_github_actions",
